@@ -1,0 +1,117 @@
+from typing import Any, Dict, List
+from mcp.server.fastmcp import FastMCP
+from tools import mongo_read, mongo_insert, mongo_update, mongo_delete
+
+# Initialize FastMCP server
+mcp = FastMCP(
+    name="test-server",
+    host="0.0.0.0",
+    port=8000,
+)
+
+# -------------------
+# Tool: Add Numbers
+# -------------------
+@mcp.tool(
+    name="add_numbers",
+    description="Add two numbers together and return the sum",
+    structured_output=True,
+)
+def add(a: float, b: float) -> Dict[str, Any]:
+    """Return the sum of two numbers in structured format"""
+    return {
+        "operation": "addition",
+        "operands": {"a": a, "b": b},
+        "result": a + b,
+        "success": True,
+    }
+
+# -------------------
+# Tool: List Tools
+# -------------------
+@mcp.tool(
+    name="list_tools",
+    description="lists tools",
+    structured_output=True,
+)
+def ltools() -> Dict[str, Any]:
+    """Return the list of tools in structured format"""
+    return {
+        "tools": ["addition", "list_tools", "health", "mongo_read_tool", "mongo_insert_tool", "mongo_update_tool", "mongo_delete_tool"],
+        "success": True,
+    }
+
+# -------------------
+# Tool: Health Check
+# -------------------
+@mcp.tool(
+    name="health",
+    description="provides health of the application",
+    structured_output=True,
+)
+def health() -> Dict[str, Any]:
+    """Return health status of MCP server."""
+    return {"status": "ok", "service": "mcp_server"}
+
+# -------------------
+# Tool: Mongo Read
+# -------------------
+@mcp.tool(
+    name="mongo_read_tool",
+    description="Reads the mongodb database based on filter and returns result documents",
+    structured_output=True,
+)
+def mongo_read_tool(filter: dict = None, projection: dict = None, limit: int = 100) -> Dict[str, Any]:
+    """Read documents from MongoDB."""
+    results = mongo_read(filter=filter, projection=projection, limit=limit)
+    return {"status": "ok", "result": results}
+
+# -------------------
+# Tool: Mongo Insert
+# -------------------
+@mcp.tool(
+    name="mongo_insert_tool",
+    description="inserts documents into the mongo db",
+    structured_output=True,
+)
+def mongo_insert_tool(documents: List[dict]) -> Dict[str, Any]:
+    """Insert one or more documents into MongoDB."""
+    if not documents:
+        return {"error": "documents_required"}
+    res = mongo_insert(documents)
+    return {"status": "ok", "result": res}
+
+# -------------------
+# Tool: Mongo Update
+# -------------------
+@mcp.tool(
+    name="mongo_update_tool",
+    description="Update documents in MongoDB based on the filter provided",
+    structured_output=True,
+)
+def mongo_update_tool(filter: dict = None, update: dict = None, many: bool = False) -> Dict[str, Any]:
+    """Update documents in MongoDB."""
+    if not update:
+        return {"error": "update_required"}
+    res = mongo_update(filter or {}, update, many=many)
+    return {"status": "ok", "result": res}
+
+# -------------------
+# Tool: Mongo Delete
+# -------------------
+@mcp.tool(
+    name="mongo_delete_tool",
+    description="deletes documents in MongoDB based on the filter provided",
+    structured_output=True,
+)
+def mongo_delete_tool(filter: dict = None, many: bool = False) -> Dict[str, Any]:
+    """Delete documents from MongoDB."""
+    res = mongo_delete(filter or {}, many=many)
+    return {"status": "ok", "result": res}
+
+# -------------------
+# Run MCP Server
+# -------------------
+if __name__ == "__main__":
+    # The magic happens here - HTTP streamable transport!
+    mcp.run(transport="streamable-http", mount_path="/mcp")
