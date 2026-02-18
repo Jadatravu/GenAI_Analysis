@@ -1,0 +1,233 @@
+row,question,reference_answer,rag_answer,cosine_similarity,sources,error
+0,What is RA–FSM?,"RA–FSM is a modular, GPT-based research assistant that uses a finite-state control loop (Relevance → Confidence → Knowledge) to produce grounded, auditable answers with deterministic citations.","RA–FSM stands for Retrieval-Augmented Finite-State Machine. It is a system designed to improve citation fidelity, calibration, and cost discipline for scientific assistance by incorporating a finite-state control structure along with deterministic citations. This approach aims to provide transparent and auditable answers for high-stakes technical work while mitigating issues such as hallucination and miscalibrated confidence in responses.
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.8276427984237671,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 14),
+1,What problem does RA–FSM aim to solve?,It mitigates hallucinations and citation fabrication in large language models used for scientific research.,"RA–FSM aims to solve the problems associated with conventional retrieval-augmented generation (RAG) systems, which often miscalibrate confidence, overthink, and cite sources that were not retrieved. It addresses these issues by integrating a finite-state machine (FSM) framework that allows for confidence-driven, iterative refinement of answers, improving citation fidelity, calibration, and cost discipline for scientific assistance.
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.4117141366004944,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 14); RA_FSM_Paper 2.pdf (page 2),
+2,What are the three core states of the RA–FSM control loop?,"The three states are Relevance, Confidence, and Knowledge.","The three core states of the RA–FSM control loop are:
+
+1. Relevance Check
+2. Confidence Check
+3. Question Decomposition
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.6231812834739685,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 2); RA_FSM_Paper 2.pdf (page 4); RA_FSM_Paper 2.pdf (page 8),
+3,What does the Relevance state do?,It checks if the user's question is within the agent's domain of expertise.,"The Relevance state is responsible for gatekeeping by determining whether a user's question is relevant to the operational domain. If a question is deemed irrelevant, it may terminate the process early and return to an idle state. If the question is relevant, the system proceeds to evaluate whether it can answer confidently.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 9
+- RA_FSM_Paper 2.pdf, page 20
+- RA_FSM_Paper 2.pdf, page 4",0.42329350113868713,RA_FSM_Paper 2.pdf (page 20); RA_FSM_Paper 2.pdf (page 4); RA_FSM_Paper 2.pdf (page 9),
+4,What is the function of the Confidence state?,It assesses whether the system can answer a question confidently based on its internal context.,"The function of the Confidence state is to score the answerability of a question using a strict JSON format and to generate a fast-draft snippet for reference. It assesses whether the system can confidently produce an answer based on the provided context.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 20
+- RA_FSM_Paper 2.pdf, page 4",0.6273077130317688,RA_FSM_Paper 2.pdf (page 18); RA_FSM_Paper 2.pdf (page 20); RA_FSM_Paper 2.pdf (page 4); RA_FSM_Paper 2.pdf (page 8),
+5,What role does the Knowledge state play?,"It retrieves external information, synthesizes answers, and appends citations.","The Knowledge state plays a crucial role in identifying knowledge gaps by formulating clarifying sub-questions and executing web searches to retrieve and contextualize external information. This process allows the system to enhance its understanding and fill in any deficiencies in its knowledge base. Additionally, newly acquired data can be processed and either appended to the session context or stored in a vector database for continual learning.
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.36119717359542847,RA_FSM_Paper 2.pdf (page 20); RA_FSM_Paper 2.pdf (page 3); RA_FSM_Paper 2.pdf (page 4); RA_FSM_Paper 2.pdf (page 8),
+6,What is meant by 'deterministic citation'?,"It means only sources actually retrieved in the session can be cited, ensuring citation fidelity.","'Deterministic citation' refers to a citation policy that enforces a closed-world approach, where the final answer can only cite specific document and span ID pairs that are present in the session evidence table. This method aims to reduce fabricated references by ensuring that only verified citations are included in the output.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 7
+- RA_FSM_Paper 2.pdf, page 12",0.5687572360038757,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 1); RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 7),
+7,What is the goal of the FSM controller in RA–FSM?,"To reduce over-reasoning, control costs, and align responses with grounded evidence.","The goal of the FSM controller in RA–FSM is to govern the agent’s own reasoning and retrieval behavior. It ensures structured control over transitions between various tasks such as checking question relevance, estimating confidence, retrieving external information, and answering. This structured control loop aims to ensure bounded iteration, reduce the risk of hallucination, and increase the fidelity of citations and confidence calibration.
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.381519615650177,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 14); RA_FSM_Paper 2.pdf (page 2),
+8,How many tiers of data sources does RA–FSM use?,"Five tiers, ranging from top journals to patents.","RA–FSM uses a ranked-tier ingestion workflow to construct a domain knowledge base, but the exact number of tiers of data sources is not specified in the provided context. 
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.374193012714386,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 14); RA_FSM_Paper 2.pdf (page 9),
+9,What are the Tier-1 sources in the ingestion pipeline?,"IEEE Xplore, Optica/OSA, and Nature Portfolio.","The Tier-1 sources in the ingestion pipeline are:
+- IEEE Xplore
+- Optica/OSA
+- Nature Portfolio
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 6",0.6421707272529602,RA_FSM_Paper 2.pdf (page 22); RA_FSM_Paper 2.pdf (page 6); RA_FSM_Paper 2.pdf (page 7),
+10,What is the purpose of the dual-store ingestion design?,It maintains a vector index for semantic retrieval and a relational table for numerical analysis.,"The purpose of the dual-store ingestion design is to facilitate both semantic retrieval and quantitative analysis. It consists of a vector store for storing document chunks embedded with text for semantic retrieval, and a relational store for normalized metrics that allows for SQL-driven analyses. This design enables the system to ground prose and verify numeric/spec constraints in the same operational loop.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 6
+- RA_FSM_Paper 2.pdf, page 9",0.5724748373031616,RA_FSM_Paper 2.pdf (page 5); RA_FSM_Paper 2.pdf (page 6); RA_FSM_Paper 2.pdf (page 7); RA_FSM_Paper 2.pdf (page 9),
+11,Which service is used for PDF parsing?,A self-hosted GROBID service that converts PDFs into TEI-XML.,"The service used for PDF parsing is GROBID.
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.6287856101989746,RA_FSM_Paper 2.pdf (page 22); RA_FSM_Paper 2.pdf (page 6); RA_FSM_Paper 2.pdf (page 7),
+12,What happens if a document fails parsing?,It is routed to a 'Needs-Manual-Fix' state and added to the Missing-List.,"If a document fails parsing (for example, due to a malformed PDF or a GROBID exception), it is routed to a ""Needs-Manual-Fix"" state. Additionally, both pay-walled and parse-failed papers are consolidated into a Missing-List.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 6",0.6369990706443787,RA_FSM_Paper 2.pdf (page 6); RA_FSM_Paper 2.pdf (page 7); RA_FSM_Paper 2.pdf (page 9),
+13,What is the benefit of a closed-world citation policy?,It ensures that all cited sources are verifiable and part of the session evidence.,"The benefit of a closed-world citation policy is that it enforces the final answer to cite only (doc id, span id) pairs present in the session evidence table. This approach enhances reviewability and ensures that the citations are grounded in the evidence that has been retrieved, which contributes to safer abstention from speculative answers.
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.5987310409545898,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 1); RA_FSM_Paper 2.pdf (page 14); RA_FSM_Paper 2.pdf (page 7),
+14,What metric measures fabricated references?,The fabricated-reference rate.,"The metric that measures fabricated references is referred to as ""citation truthfulness."" This metric is part of reward models that score answers based on their factual alignment, which helps raise accuracy in domain tests.
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.43612703680992126,RA_FSM_Paper 2.pdf (page 1); RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 7),
+15,What is the purpose of the Confidence JSON schema?,It enforces structured outputs with defined confidence scores between 0 and 1.,"{
+  ""confidence_score"": 1.0,
+  ""confident"": true,
+  ""reasoning"": ""The Confidence JSON schema assesses answerability and generates structured outputs.""
+}
+Sources: RA_FSM_Paper 2.pdf",0.5014398694038391,RA_FSM_Paper 2.pdf (page 18); RA_FSM_Paper 2.pdf (page 20); RA_FSM_Paper 2.pdf (page 21),
+16,What retrieval technique does RA–FSM use?,A FAISS HNSW vector index for text embeddings.,"RA–FSM uses a finite-state machine (FSM) with explicit transition guards and retry budgets as its retrieval technique. It implements an FSM-gated retrieval loop coupled with a deterministic citation pipeline and a domain-aware ingestion layer.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 0",0.28345197439193726,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 14),
+17,What database supports numerical queries?,A PostgreSQL relational table that stores normalized metrics keyed by DOI and date.,"The database that supports numerical queries is PostgreSQL, as it is used to store normalized metrics that can be queried using SQL for quantitative analysis.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 6
+- RA_FSM_Paper 2.pdf, page 9",0.5054166913032532,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 6); RA_FSM_Paper 2.pdf (page 7); RA_FSM_Paper 2.pdf (page 9),
+18,What language models are used in the FSM?,"GPT-4o-mini for Relevance, o4-mini for Confidence, and o3 for Knowledge.","The language models used in the FSM are ""gpt-4o-mini"" and ""o4-mini."" 
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 21",0.5526752471923828,RA_FSM_Paper 2.pdf (page 13); RA_FSM_Paper 2.pdf (page 2); RA_FSM_Paper 2.pdf (page 21),
+19,What ensures bounded iteration during reasoning?,A retry cap of five iterations.,"Bounded iteration during reasoning is ensured by a structured control loop that reduces hallucination risk and increases transparency in multi-turn question processing. Additionally, the design tracks confidence across decomposed subtopics, triggering search only for unresolved concepts and stopping when all components meet a high-confidence threshold. This approach supports targeted retrieval rather than exhaustive context stuffing.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 2
+- RA_FSM_Paper 2.pdf, page 0",0.25068607926368713,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 14); RA_FSM_Paper 2.pdf (page 2),
+20,How does RA–FSM prevent hallucinations?,By grounding responses in retrieved evidence and enforcing deterministic citations.,"RA–FSM prevents hallucinations by wrapping generation in a finite-state control loop that includes relevance, confidence, and knowledge. This system filters out-of-scope queries, scores answerability, decomposes questions, and triggers retrieval only when necessary. Additionally, it emits answers with confidence labels and provides in-corpus, de-duplicated references, which helps ensure that the information is accurate and reliable.
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.35016104578971863,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 14); RA_FSM_Paper 2.pdf (page 17),
+21,What is the Confidence threshold for answering?,A confidence score of 0.75 or higher.,"The confidence threshold for answering is that the confidence score must be at least 0.75 for the agent to be considered confident and proceed to answer the question.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 4
+- RA_FSM_Paper 2.pdf, page 18
+- RA_FSM_Paper 2.pdf, page 8",0.6211965084075928,RA_FSM_Paper 2.pdf (page 18); RA_FSM_Paper 2.pdf (page 4); RA_FSM_Paper 2.pdf (page 8),
+22,What is 'self-evaluation' in the FSM?,The process of scoring answerability and revising responses until confidence is sufficient.,"In the FSM, 'self-evaluation' refers to a state that repeatedly verifies subtopic coverage before forwarding to the Answer state. This process helps improve the reliability of the answers by ensuring that the responses capture the meaning of the gold responses more accurately. The self-evaluation state is part of a bounded retry loop that allows for multiple verification attempts, enhancing the overall correctness of the system.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 12",0.48565033078193665,RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 13),
+23,What are the six evaluation categories?,"Analytical reasoning, numerical analysis, methodological critique, comparative synthesis, factual extraction, and application design.","The six evaluation categories are:
+
+1. Analytical Reasoning
+2. Numerical Analysis
+3. Methodological Critique
+4. Comparative Literature Synthesis
+5. Anecdotal Response
+6. Application & Use Case
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 10",0.6983739137649536,RA_FSM_Paper 2.pdf (page 10); RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 19),
+24,What average latency was observed?,54.6 seconds per query.,"The average latency observed was 54.6 seconds.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 14",0.48994922637939453,RA_FSM_Paper 2.pdf (page 11); RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 13); RA_FSM_Paper 2.pdf (page 14),
+25,What is the mean cost per query?,$0.017.,"The mean cost per query is $0.017.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 12",0.4079132676124573,RA_FSM_Paper 2.pdf (page 11); RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 13),
+26,What is citation F1 achieved by RA–FSM?,0.523 overall and 0.562 on confident answers.,"The citation F1 achieved by RA–FSM is 0.523 overall and 0.562 on answered items.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 12",0.4530920684337616,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 14),
+27,How many retries are allowed per question?,Up to five unsuccessful attempts before aborting.,"The system allows for five unsuccessful attempts per question before it informs the user that it could not reach a high confidence in the question.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 4",0.5924369692802429,RA_FSM_Paper 2.pdf (page 10); RA_FSM_Paper 2.pdf (page 11); RA_FSM_Paper 2.pdf (page 4); RA_FSM_Paper 2.pdf (page 8),
+28,How does RA–FSM compare to baseline models?,It outperforms ungated fast drafts and vanilla GPT models in correctness and citation fidelity.,"RA–FSM is preferred by domain experts over baseline models, including a strong Notebook LM (NLM) and a vanilla single-pass baseline, due to its stronger handling of boundary conditions and more defensible use of evidence. It also explores beyond the NLM while allowing for tunable latency and cost. 
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.44218143820762634,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 14),
+29,What is ECE in calibration metrics?,"Expected Calibration Error, measuring the accuracy of confidence estimates.","ECE in calibration metrics refers to ""Expected Calibration Error."" It is a measure of how well the predicted probabilities of a model align with the actual outcomes. In the context provided, raw scores were found to be overconfident with an ECE of 0.325, which was improved to 0.164 after applying isotonic regression.
+
+Sources:
+- RA_FSM_Paper 2.pdf, pages 12-14",0.6237528920173645,RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 13); RA_FSM_Paper 2.pdf (page 14),
+30,How did isotonic regression affect ECE?,It reduced ECE from 0.325 to 0.164.,"Isotonic regression halved the calibration error, reducing the Expected Calibration Error (ECE) from 0.325 to 0.164. This indicates a significant improvement in confidence calibration.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 12
+- RA_FSM_Paper 2.pdf, page 13",0.5036869645118713,RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 13); RA_FSM_Paper 2.pdf (page 9),
+31,What does 'AURC' measure?,"Area Under the Risk Curve, related to confidence calibration.","'AURC' measures the area under the reliability curve, which is an indicator of the quality of confidence calibration in the system's outputs. Lower values of AURC indicate better calibration of the confidence scores associated with the answers provided by the system.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 13
+- RA_FSM_Paper 2.pdf, page 12",0.7233800292015076,RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 13); RA_FSM_Paper 2.pdf (page 14); RA_FSM_Paper 2.pdf (page 9),
+32,What is the average input token count?,"About 9,304 tokens per query.","I don't know. 
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.09205372631549835,RA_FSM_Paper 2.pdf (page 11); RA_FSM_Paper 2.pdf (page 14); RA_FSM_Paper 2.pdf (page 20); RA_FSM_Paper 2.pdf (page 22),
+33,What is the FSM’s average output token count?,"About 2,264 tokens per query.","The FSM’s average output token count is 2.3k tokens.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 12",0.5060118436813354,RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 13),
+34,What is the 'Seed → Snowball → Saturate' heuristic?,It broadens coverage by following citation links until most new DOIs are already known.,"The 'Seed → Snowball → Saturate' heuristic is a method used to broaden coverage in literature retrieval. It starts from seed papers and follows backward citations and forward ""Cited-by"" links until approximately 90% of newly encountered DOIs are already present. At that point, the sub-search is considered saturated.
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.5898088812828064,RA_FSM_Paper 2.pdf (page 4); RA_FSM_Paper 2.pdf (page 5); RA_FSM_Paper 2.pdf (page 6); RA_FSM_Paper 2.pdf (page 7),
+35,What is the retrieval similarity threshold?,0.75.,"The retrieval similarity threshold is a confidence score of 0.75. Scores below this threshold trigger question decomposition, retrieval refresh, or an ""I don't know"" disclaimer.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 8
+- RA_FSM_Paper 2.pdf, page 18",0.3327014744281769,RA_FSM_Paper 2.pdf (page 18); RA_FSM_Paper 2.pdf (page 8); RA_FSM_Paper 2.pdf (page 9),
+36,What is the FSM’s primary advantage according to experts?,Its auditable and transparent reasoning process.,"The FSM’s primary advantage according to experts is that it consistently improves both factual alignment and response reliability. It captures the meaning of gold responses more reliably than ungated fast drafts, achieving an 85% YES rate overall and 88.4% when confident.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 12",0.30261480808258057,RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 13),
+37,How does RA–FSM improve citation reliability?,It uses deterministic source alignment and claim-to-evidence mapping.,"RA–FSM improves citation reliability through several mechanisms: it employs a finite-state machine (FSM) with explicit transition guards and retry budgets, which enhances the system's audibility and citation fidelity. Additionally, it incorporates a deterministic citation pipeline and a domain-aware ingestion layer, ensuring that citations are more faithful to the retrieved evidence. The system also includes auto-abstain thresholds, red-team prompts to target misleading citations, and per-query logging of evidence IDs, which collectively contribute to better citation reliability and accountability.
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.4645625352859497,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 14),
+38,What is the Knowledge base’s temporal scope?,Literature published from 2018 to the present.,"I don't know. 
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.16666018962860107,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 10); RA_FSM_Paper 2.pdf (page 3); RA_FSM_Paper 2.pdf (page 5),
+39,What does 'bounded retrieval' mean?,The FSM limits search iterations and retrieval depth to avoid over-fetching.,"The context does not provide a specific definition for 'bounded retrieval.' Therefore, I don't know what 'bounded retrieval' means.
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.389854371547699,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 2),
+40,What is the purpose of the cron controller?,It schedules periodic ingestion cycles to refresh the knowledge base.,"The purpose of the cron controller is to govern the ingestion cadence of a finite-state machine (FSM). It manages the timing of transitions from an Idle state to a Crawl Sources state, executing the full pipeline to ensure that resources are consumed efficiently and to provide deterministic latency between when a paper appears online and when it becomes searchable.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 5",0.4694553315639496,RA_FSM_Paper 2.pdf (page 14); RA_FSM_Paper 2.pdf (page 4); RA_FSM_Paper 2.pdf (page 5),
+41,How are confidence scores represented?,"As discrete values: 0, 0.25, 0.5, 0.75, 1.0.","{
+  ""confidence_score"": 0.75,
+  ""confident"": true,
+  ""reasoning"": ""Confidence scores are represented as values in the set [0.0, 0.25, 0.5, 0.75, 1.0].""
+}
+Sources: RA_FSM_Paper 2.pdf",0.35138338804244995,RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 18); RA_FSM_Paper 2.pdf (page 8),
+42,What is the main risk of deterministic citations?,They can limit flexibility in exploratory or speculative responses.,"The main risk of deterministic citations is that they constrain stylistic flexibility, which may be overly conservative for exploratory or speculative tasks. This limitation can lead to a lack of creativity or innovation in responses, as the system is restricted to citing only from a closed set of references.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 14",0.5258410573005676,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 1); RA_FSM_Paper 2.pdf (page 14); RA_FSM_Paper 2.pdf (page 7),
+43,What user interface does RA–FSM include?,An interactive chat interface with grounded answers and a knowledge-base panel.,"RA–FSM includes a finite-state machine (FSM) as its user interface. The FSM governs the agent’s reasoning and retrieval behavior, managing transitions between various states such as checking question relevance, estimating confidence, decomposing queries, retrieving information, and answering.
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.33971571922302246,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 2),
+44,What was the overall correctness rate?,85% overall and 88.4% on confident answers.,"The overall correctness rate was 85%.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 12",0.4982229769229889,RA_FSM_Paper 2.pdf (page 11); RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 13),
+45,What was the contradiction rate compared to baseline?,3% vs 20% for ungated fast drafts.,"The contradiction rate compared to baseline was 3% for the FSM answers, while it was 20% for the ungated fast drafts. 
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 12-13",0.5939840078353882,RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 13),
+46,What type of evaluation did domain experts perform?,Blinded A/B reviews comparing RA–FSM with baseline systems.,"Domain experts performed evaluations in six task categories: analytical reasoning, numerical analysis, methodological critique, comparative synthesis, factual extraction, and application design. They conducted blinded A/B reviews to compare the performance of RA–FSM against other models, focusing on aspects like boundary-condition handling and evidence use.
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.6721133589744568,RA_FSM_Paper 2.pdf (page 0); RA_FSM_Paper 2.pdf (page 10); RA_FSM_Paper 2.pdf (page 13),
+47,How does retrieval depth (k) affect performance?,Higher k improves recall but can dilute context and increase cost.,"Retrieval depth (k) affects performance by influencing the system's ability to handle complex queries and the overall efficiency of the response generation. Higher retrieval depths (e.g., k = 12) can lead to context dilution effects, particularly when using medium to high reasoning prompts. This means that while increasing k may provide more information, it can also overwhelm the system and reduce the clarity of the final answer. The trade-offs between latency and cost are also impacted by retrieval depth, as deeper retrieval introduces more overhead due to confidence checks and targeted retrieval.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 10
+- RA_FSM_Paper 2.pdf, page 11
+- RA_FSM_Paper 2.pdf, page 13",0.5439037084579468,RA_FSM_Paper 2.pdf (page 10); RA_FSM_Paper 2.pdf (page 11); RA_FSM_Paper 2.pdf (page 13),
+48,What is the implication of 'auditable answers'?,"Every claim is linked to verifiable evidence, enabling traceability.","The implication of 'auditable answers' refers to the ability to trace and verify the sources and reasoning behind the generated responses. This concept emphasizes the importance of having clear citations and evidence that support each claim made in the answer. It enhances reviewability and allows for safer abstention from providing answers when the evidence is insufficient or unclear.
+
+Sources:
+- RA_FSM_Paper 2.pdf, page 14",0.4093133211135864,RA_FSM_Paper 2.pdf (page 10); RA_FSM_Paper 2.pdf (page 14); RA_FSM_Paper 2.pdf (page 20); RA_FSM_Paper 2.pdf (page 8),
+49,What future improvements are planned?,Adapting confidence thresholds using expert feedback and adding domain transfer tests.,"The future improvements planned include enhancing the efficiency and cost-effectiveness of the RA–FSM system. This involves tuning overhead costs through adjustable parameters like retrieval depth and reasoning prompt levels, which can be tailored for different application settings. Additionally, there are plans for further studies to improve citation fidelity, calibration, and overall system performance, as well as the release of configurations and settings to support reproducibility.
+
+Sources:
+- RA_FSM_Paper 2.pdf",0.34477493166923523,RA_FSM_Paper 2.pdf (page 12); RA_FSM_Paper 2.pdf (page 14); RA_FSM_Paper 2.pdf (page 15); RA_FSM_Paper 2.pdf (page 17),

@@ -1,0 +1,51 @@
+Question,Answer
+What is RA–FSM?,"RA–FSM is a modular, GPT-based research assistant that uses a finite-state control loop (Relevance → Confidence → Knowledge) to produce grounded, auditable answers with deterministic citations."
+What problem does RA–FSM aim to solve?,It mitigates hallucinations and citation fabrication in large language models used for scientific research.
+What are the three core states of the RA–FSM control loop?,"The three states are Relevance, Confidence, and Knowledge."
+What does the Relevance state do?,It checks if the user's question is within the agent's domain of expertise.
+What is the function of the Confidence state?,It assesses whether the system can answer a question confidently based on its internal context.
+What role does the Knowledge state play?,"It retrieves external information, synthesizes answers, and appends citations."
+What is meant by 'deterministic citation'?,"It means only sources actually retrieved in the session can be cited, ensuring citation fidelity."
+What is the goal of the FSM controller in RA–FSM?,"To reduce over-reasoning, control costs, and align responses with grounded evidence."
+How many tiers of data sources does RA–FSM use?,"Five tiers, ranging from top journals to patents."
+What are the Tier-1 sources in the ingestion pipeline?,"IEEE Xplore, Optica/OSA, and Nature Portfolio."
+What is the purpose of the dual-store ingestion design?,It maintains a vector index for semantic retrieval and a relational table for numerical analysis.
+Which service is used for PDF parsing?,A self-hosted GROBID service that converts PDFs into TEI-XML.
+What happens if a document fails parsing?,It is routed to a 'Needs-Manual-Fix' state and added to the Missing-List.
+What is the benefit of a closed-world citation policy?,It ensures that all cited sources are verifiable and part of the session evidence.
+What metric measures fabricated references?,The fabricated-reference rate.
+What is the purpose of the Confidence JSON schema?,It enforces structured outputs with defined confidence scores between 0 and 1.
+What retrieval technique does RA–FSM use?,A FAISS HNSW vector index for text embeddings.
+What database supports numerical queries?,A PostgreSQL relational table that stores normalized metrics keyed by DOI and date.
+What language models are used in the FSM?,"GPT-4o-mini for Relevance, o4-mini for Confidence, and o3 for Knowledge."
+What ensures bounded iteration during reasoning?,A retry cap of five iterations.
+How does RA–FSM prevent hallucinations?,By grounding responses in retrieved evidence and enforcing deterministic citations.
+What is the Confidence threshold for answering?,A confidence score of 0.75 or higher.
+What is 'self-evaluation' in the FSM?,The process of scoring answerability and revising responses until confidence is sufficient.
+What are the six evaluation categories?,"Analytical reasoning, numerical analysis, methodological critique, comparative synthesis, factual extraction, and application design."
+What average latency was observed?,54.6 seconds per query.
+What is the mean cost per query?,$0.017.
+What is citation F1 achieved by RA–FSM?,0.523 overall and 0.562 on confident answers.
+How many retries are allowed per question?,Up to five unsuccessful attempts before aborting.
+How does RA–FSM compare to baseline models?,It outperforms ungated fast drafts and vanilla GPT models in correctness and citation fidelity.
+What is ECE in calibration metrics?,"Expected Calibration Error, measuring the accuracy of confidence estimates."
+How did isotonic regression affect ECE?,It reduced ECE from 0.325 to 0.164.
+What does 'AURC' measure?,"Area Under the Risk Curve, related to confidence calibration."
+What is the average input token count?,"About 9,304 tokens per query."
+What is the FSM’s average output token count?,"About 2,264 tokens per query."
+What is the 'Seed → Snowball → Saturate' heuristic?,It broadens coverage by following citation links until most new DOIs are already known.
+What is the retrieval similarity threshold?,0.75.
+What is the FSM’s primary advantage according to experts?,Its auditable and transparent reasoning process.
+How does RA–FSM improve citation reliability?,It uses deterministic source alignment and claim-to-evidence mapping.
+What is the Knowledge base’s temporal scope?,Literature published from 2018 to the present.
+What does 'bounded retrieval' mean?,The FSM limits search iterations and retrieval depth to avoid over-fetching.
+What is the purpose of the cron controller?,It schedules periodic ingestion cycles to refresh the knowledge base.
+How are confidence scores represented?,"As discrete values: 0, 0.25, 0.5, 0.75, 1.0."
+What is the main risk of deterministic citations?,They can limit flexibility in exploratory or speculative responses.
+What user interface does RA–FSM include?,An interactive chat interface with grounded answers and a knowledge-base panel.
+What was the overall correctness rate?,85% overall and 88.4% on confident answers.
+What was the contradiction rate compared to baseline?,3% vs 20% for ungated fast drafts.
+What type of evaluation did domain experts perform?,Blinded A/B reviews comparing RA–FSM with baseline systems.
+How does retrieval depth (k) affect performance?,Higher k improves recall but can dilute context and increase cost.
+What is the implication of 'auditable answers'?,"Every claim is linked to verifiable evidence, enabling traceability."
+What future improvements are planned?,Adapting confidence thresholds using expert feedback and adding domain transfer tests.
