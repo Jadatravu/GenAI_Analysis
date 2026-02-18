@@ -1,0 +1,26 @@
+Question,Answer
+What are the three primary FSM states in RA–FSM?,"Relevance, Confidence, and Knowledge."
+What is the purpose of the Relevance state?,To determine whether a user query is within the operational domain before proceeding.
+When does the FSM terminate early?,When the Relevance check determines the question is out of scope.
+What triggers query decomposition in the FSM?,If the Confidence state determines the system is not sufficiently confident to answer.
+What is the retry limit for the refinement loop?,The system stops after five unsuccessful attempts (i ≥ 5).
+What are the possible subtopic confidence levels?,"Low, Medium, and High."
+What happens when all subtopics reach high confidence?,The system proceeds to generate the final answer.
+What happens if confidence remains low after five iterations?,The system exits the loop and informs the user it cannot reach high confidence.
+What is the closed-world citation policy?,"The final answer may cite only evidence (doc id, span id) retrieved in the session."
+Name one citation fidelity metric used in evaluation.,Fabricated-reference rate.
+What is claim coverage in citation evaluation?,The fraction of claims that have at least one supporting evidence span.
+What step rejects unsupported citations?,The deterministic citation pipeline rejects any citation lacking an ID in session evidence.
+What are the two storage systems used in dual-store ingestion?,A FAISS HNSW vector index and a PostgreSQL relational metrics table.
+What embedding model is used for vector storage?,text-embedding-3-large.
+What parser is used to convert PDFs into structured text?,GROBID.
+What heuristic is used to expand literature coverage?,Seed → Snowball → Saturate.
+How does the system handle paywalled PDFs?,"It stores the abstract, adds the citation to a Missing-List, and waits for manual upload."
+What similarity threshold is used in retrieval?,0.75.
+How many total experimental runs were conducted in the parameter sweep?,"1,080 runs."
+How many evaluation questions were used?,60 questions across six categories.
+What was the overall YES rate (correctness) for FSM answers?,85% overall.
+What was the contradiction rate for FSM answers?,3% overall.
+What was the average latency per query?,54.6 seconds.
+What was the mean cost per query?,$0.017 per query.
+What calibration method reduced ECE from 0.325 to 0.164?,Isotonic regression.
