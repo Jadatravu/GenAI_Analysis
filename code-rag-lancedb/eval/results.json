@@ -1,0 +1,87 @@
+[
+  {
+    "user_input":"How does the exponential backoff delay get computed, and is jitter added?",
+    "retrieved_contexts":[
+      "def exponential_backoff(attempt: int, base: float = 0.5, cap: float = 30.0) -> float:\n    \"\"\"Compute an exponential backoff delay with jitter for a given attempt number.\"\"\"\n    delay = min(cap, base * (2 ** attempt))\n    jitter = random.uniform(0, delay * 0.1)\n    return delay + jitter",
+      "\"\"\"Utilities for resilient HTTP calls: retries, exponential backoff, and a\nsimple in-memory rate limiter.\"\"\"\nimport random\nimport time\nfrom dataclasses import dataclass, field",
+      "    def wait_time(self) -> float:\n        \"\"\"Seconds to wait before the next call would be allowed.\"\"\"\n        if not self._calls:\n            return 0.0\n        oldest = min(self._calls)\n        return max(0.0, self.period_seconds - (time.time() - oldest))",
+      "def retry_with_backoff(func, max_attempts: int = 5, base: float = 0.5):\n    \"\"\"Call `func` with no arguments, retrying on exception with exponential backoff.\"\"\"\n    last_exc = None\n    for attempt in range(max_attempts):\n        try:\n            return func()\n        except Exception as e:  # noqa: BLE001\n            last_exc = e\n            time.sleep(exponential_backoff(attempt, base=base))\n    raise RuntimeError(f\"All {max_attempts} attempts failed\") from last_exc",
+      "class RateLimiter:\n    \"\"\"Token-bucket style in-memory rate limiter.\"\"\"\n\n    max_calls: int\n    period_seconds: float\n    _calls: list = field(default_factory=list)",
+      "def cached(capacity: int = 128):\n    \"\"\"Decorator factory that memoizes a function's return value using LRUCache.\"\"\"\n\n    def decorator(func):\n        cache = LRUCache(capacity=capacity)\n\n        @wraps(func)\n        def wrapper(*args, **kwargs):\n            key = (args, tuple(sorted(kwargs.items())))\n            hit = cache.get(key)\n            if hit is not None:\n                return hit\n            result = func(*args, **kwargs)\n            cache.put(key, result)\n            return result\n\n        return wrapper\n\n    return decorator"
+    ],
+    "response":"The exponential backoff delay is computed in the `exponential_backoff` function located in `.\/data\/sample_code\/example1.py`. The delay is calculated using the formula:\n\n```python\ndelay = min(cap, base * (2 ** attempt))\n```\n\nThis means the delay is the minimum of a specified cap and the base multiplied by 2 raised to the power of the attempt number. \n\nYes, jitter is added to the delay. A random jitter is computed as:\n\n```python\njitter = random.uniform(0, delay * 0.1)\n```\n\nThe final return value of the function is:\n\n```python\nreturn delay + jitter\n```\n\nThis indicates that the computed delay includes a random jitter component.",
+    "reference":"exponential_backoff computes delay = min(cap, base * 2**attempt), then adds a random jitter between 0 and 10% of that delay, and returns delay + jitter. This is defined in data\/sample_code\/example1.py.",
+    "faithfulness":0.8571428571,
+    "answer_relevancy":0.8076314146,
+    "context_precision":0.9999999999,
+    "context_recall":0.5
+  },
+  {
+    "user_input":"How does retry_with_backoff decide when to give up retrying?",
+    "retrieved_contexts":[
+      "def retry_with_backoff(func, max_attempts: int = 5, base: float = 0.5):\n    \"\"\"Call `func` with no arguments, retrying on exception with exponential backoff.\"\"\"\n    last_exc = None\n    for attempt in range(max_attempts):\n        try:\n            return func()\n        except Exception as e:  # noqa: BLE001\n            last_exc = e\n            time.sleep(exponential_backoff(attempt, base=base))\n    raise RuntimeError(f\"All {max_attempts} attempts failed\") from last_exc",
+      "def exponential_backoff(attempt: int, base: float = 0.5, cap: float = 30.0) -> float:\n    \"\"\"Compute an exponential backoff delay with jitter for a given attempt number.\"\"\"\n    delay = min(cap, base * (2 ** attempt))\n    jitter = random.uniform(0, delay * 0.1)\n    return delay + jitter",
+      "\"\"\"Utilities for resilient HTTP calls: retries, exponential backoff, and a\nsimple in-memory rate limiter.\"\"\"\nimport random\nimport time\nfrom dataclasses import dataclass, field",
+      "    def wait_time(self) -> float:\n        \"\"\"Seconds to wait before the next call would be allowed.\"\"\"\n        if not self._calls:\n            return 0.0\n        oldest = min(self._calls)\n        return max(0.0, self.period_seconds - (time.time() - oldest))",
+      "def cached(capacity: int = 128):\n    \"\"\"Decorator factory that memoizes a function's return value using LRUCache.\"\"\"\n\n    def decorator(func):\n        cache = LRUCache(capacity=capacity)\n\n        @wraps(func)\n        def wrapper(*args, **kwargs):\n            key = (args, tuple(sorted(kwargs.items())))\n            hit = cache.get(key)\n            if hit is not None:\n                return hit\n            result = func(*args, **kwargs)\n            cache.put(key, result)\n            return result\n\n        return wrapper\n\n    return decorator",
+      "class RateLimiter:\n    \"\"\"Token-bucket style in-memory rate limiter.\"\"\"\n\n    max_calls: int\n    period_seconds: float\n    _calls: list = field(default_factory=list)"
+    ],
+    "response":"The `retry_with_backoff` function decides to give up retrying after a specified number of attempts, defined by the `max_attempts` parameter. If all attempts fail, it raises a `RuntimeError`. This is implemented in the following lines of the function:\n\n```python\nfor attempt in range(max_attempts):\n    ...\nraise RuntimeError(f\"All {max_attempts} attempts failed\") from last_exc\n```\n\nThis code is located in the `.\/data\/sample_code\/example1.py` file, within the `retry_with_backoff` function (lines 15-24).",
+    "reference":"retry_with_backoff calls func() up to max_attempts times. On each exception it records it and sleeps using exponential_backoff(attempt, base=base). If all attempts fail, it raises a RuntimeError wrapping the last exception, in data\/sample_code\/example1.py.",
+    "faithfulness":0.625,
+    "answer_relevancy":0.8598272894,
+    "context_precision":0.9999999999,
+    "context_recall":0.6666666667
+  },
+  {
+    "user_input":"What algorithm does RateLimiter use and how does it track calls?",
+    "retrieved_contexts":[
+      "class RateLimiter:\n    \"\"\"Token-bucket style in-memory rate limiter.\"\"\"\n\n    max_calls: int\n    period_seconds: float\n    _calls: list = field(default_factory=list)",
+      "\"\"\"Utilities for resilient HTTP calls: retries, exponential backoff, and a\nsimple in-memory rate limiter.\"\"\"\nimport random\nimport time\nfrom dataclasses import dataclass, field",
+      "    def allow(self) -> bool:\n        \"\"\"Return True if a call is allowed right now, recording it if so.\"\"\"\n        now = time.time()\n        self._calls = [t for t in self._calls if now - t < self.period_seconds]\n        if len(self._calls) < self.max_calls:\n            self._calls.append(now)\n            return True\n        return False",
+      "    def wait_time(self) -> float:\n        \"\"\"Seconds to wait before the next call would be allowed.\"\"\"\n        if not self._calls:\n            return 0.0\n        oldest = min(self._calls)\n        return max(0.0, self.period_seconds - (time.time() - oldest))",
+      "def exponential_backoff(attempt: int, base: float = 0.5, cap: float = 30.0) -> float:\n    \"\"\"Compute an exponential backoff delay with jitter for a given attempt number.\"\"\"\n    delay = min(cap, base * (2 ** attempt))\n    jitter = random.uniform(0, delay * 0.1)\n    return delay + jitter",
+      "def cached(capacity: int = 128):\n    \"\"\"Decorator factory that memoizes a function's return value using LRUCache.\"\"\"\n\n    def decorator(func):\n        cache = LRUCache(capacity=capacity)\n\n        @wraps(func)\n        def wrapper(*args, **kwargs):\n            key = (args, tuple(sorted(kwargs.items())))\n            hit = cache.get(key)\n            if hit is not None:\n                return hit\n            result = func(*args, **kwargs)\n            cache.put(key, result)\n            return result\n\n        return wrapper\n\n    return decorator"
+    ],
+    "response":"The `RateLimiter` class in `.\/data\/sample_code\/example1.py` uses a token-bucket style algorithm to limit the rate of calls. It tracks calls using a list `_calls`, which records the timestamps of the calls made within a specified period.\n\nIn the `allow` method, it checks the current time against the timestamps in `_calls` to determine if a new call can be made. If the number of calls in the last `period_seconds` is less than `max_calls`, it appends the current timestamp to `_calls` and returns `True`, indicating that the call is allowed. If the limit is reached, it returns `False`.\n\nHere's a brief overview of the relevant code:\n\n```python\ndef allow(self) -> bool:\n    now = time.time()\n    self._calls = [t for t in self._calls if now - t < self.period_seconds]\n    if len(self._calls) < self.max_calls:\n        self._calls.append(now)\n        return True\n    return False\n```",
+    "reference":"RateLimiter implements a token-bucket-style limiter. It keeps a list of call timestamps, and in allow() it filters out timestamps older than period_seconds, then permits the call (and records the new timestamp) only if fewer than max_calls remain within the window. wait_time() returns how long until the oldest recorded call falls outside the window.",
+    "faithfulness":1.0,
+    "answer_relevancy":0.7130281651,
+    "context_precision":0.8055555555,
+    "context_recall":1.0
+  },
+  {
+    "user_input":"How does LRUCache decide which item to evict when it is full?",
+    "retrieved_contexts":[
+      "class LRUCache:\n    \"\"\"Fixed-capacity least-recently-used cache backed by an OrderedDict.\"\"\"",
+      "    def put(self, key, value):\n        \"\"\"Insert or update `key` with `value`, evicting the LRU item if over capacity.\"\"\"\n        if key in self._store:\n            self._store.move_to_end(key)\n        self._store[key] = value\n        if len(self._store) > self.capacity:\n            self._store.popitem(last=False)",
+      "\"\"\"A small LRU cache implementation and a decorator to apply it to functions.\"\"\"\nfrom collections import OrderedDict\nfrom functools import wraps",
+      "def cached(capacity: int = 128):\n    \"\"\"Decorator factory that memoizes a function's return value using LRUCache.\"\"\"\n\n    def decorator(func):\n        cache = LRUCache(capacity=capacity)\n\n        @wraps(func)\n        def wrapper(*args, **kwargs):\n            key = (args, tuple(sorted(kwargs.items())))\n            hit = cache.get(key)\n            if hit is not None:\n                return hit\n            result = func(*args, **kwargs)\n            cache.put(key, result)\n            return result\n\n        return wrapper\n\n    return decorator",
+      "    def clear(self):\n        \"\"\"Remove all entries from the cache.\"\"\"\n        self._store.clear()",
+      "    def get(self, key):\n        \"\"\"Return the cached value for `key`, or None if missing. Marks as recently used.\"\"\"\n        if key not in self._store:\n            return None\n        self._store.move_to_end(key)\n        return self._store[key]"
+    ],
+    "response":"The `LRUCache` decides which item to evict when it is full by removing the least recently used (LRU) item. This is implemented in the `put` method, where it checks if the cache size exceeds its capacity. If it does, it calls `self._store.popitem(last=False)`, which removes the first item added to the `OrderedDict`, effectively evicting the LRU item.\n\nThis behavior is defined in the `put` method located in `.\/data\/sample_code\/example2.py` (lines 20-26).",
+    "reference":"LRUCache stores items in an OrderedDict. put() moves an existing key to the end (most recently used) or inserts new ones, and if the size exceeds capacity it evicts the least-recently-used item via popitem(last=False), i.e. the first item in the OrderedDict, in data\/sample_code\/example2.py.",
+    "faithfulness":0.875,
+    "answer_relevancy":0.9941204812,
+    "context_precision":0.5,
+    "context_recall":1.0
+  },
+  {
+    "user_input":"How does the cached() decorator build its cache key from function arguments?",
+    "retrieved_contexts":[
+      "def cached(capacity: int = 128):\n    \"\"\"Decorator factory that memoizes a function's return value using LRUCache.\"\"\"\n\n    def decorator(func):\n        cache = LRUCache(capacity=capacity)\n\n        @wraps(func)\n        def wrapper(*args, **kwargs):\n            key = (args, tuple(sorted(kwargs.items())))\n            hit = cache.get(key)\n            if hit is not None:\n                return hit\n            result = func(*args, **kwargs)\n            cache.put(key, result)\n            return result\n\n        return wrapper\n\n    return decorator",
+      "\"\"\"A small LRU cache implementation and a decorator to apply it to functions.\"\"\"\nfrom collections import OrderedDict\nfrom functools import wraps",
+      "    def get(self, key):\n        \"\"\"Return the cached value for `key`, or None if missing. Marks as recently used.\"\"\"\n        if key not in self._store:\n            return None\n        self._store.move_to_end(key)\n        return self._store[key]",
+      "class LRUCache:\n    \"\"\"Fixed-capacity least-recently-used cache backed by an OrderedDict.\"\"\"",
+      "def retry_with_backoff(func, max_attempts: int = 5, base: float = 0.5):\n    \"\"\"Call `func` with no arguments, retrying on exception with exponential backoff.\"\"\"\n    last_exc = None\n    for attempt in range(max_attempts):\n        try:\n            return func()\n        except Exception as e:  # noqa: BLE001\n            last_exc = e\n            time.sleep(exponential_backoff(attempt, base=base))\n    raise RuntimeError(f\"All {max_attempts} attempts failed\") from last_exc",
+      "    def clear(self):\n        \"\"\"Remove all entries from the cache.\"\"\"\n        self._store.clear()"
+    ],
+    "response":"The `cached()` decorator builds its cache key by combining the positional arguments (`args`) and the keyword arguments (`kwargs`). Specifically, it creates a key as follows:\n\n```python\nkey = (args, tuple(sorted(kwargs.items())))\n```\n\nThis means the key is a tuple where the first element is the `args` and the second element is a sorted tuple of the `kwargs` items. This approach ensures that the cache key is unique for different combinations of function arguments. \n\nThis implementation can be found in the `cached` function in the file `.\/data\/sample_code\/example2.py`.",
+    "reference":"The cached decorator's wrapper builds the cache key as a tuple: (args, tuple(sorted(kwargs.items()))), combining positional args with sorted keyword args, then looks it up in an LRUCache instance created per decorated function.",
+    "faithfulness":0.6666666667,
+    "answer_relevancy":0.8611398035,
+    "context_precision":0.9999999999,
+    "context_recall":1.0
+  }
+]

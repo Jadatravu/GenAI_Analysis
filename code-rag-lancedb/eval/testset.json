@@ -1,0 +1,22 @@
+[
+  {
+    "question": "How does the exponential backoff delay get computed, and is jitter added?",
+    "ground_truth": "exponential_backoff computes delay = min(cap, base * 2**attempt), then adds a random jitter between 0 and 10% of that delay, and returns delay + jitter. This is defined in data/sample_code/example1.py."
+  },
+  {
+    "question": "How does retry_with_backoff decide when to give up retrying?",
+    "ground_truth": "retry_with_backoff calls func() up to max_attempts times. On each exception it records it and sleeps using exponential_backoff(attempt, base=base). If all attempts fail, it raises a RuntimeError wrapping the last exception, in data/sample_code/example1.py."
+  },
+  {
+    "question": "What algorithm does RateLimiter use and how does it track calls?",
+    "ground_truth": "RateLimiter implements a token-bucket-style limiter. It keeps a list of call timestamps, and in allow() it filters out timestamps older than period_seconds, then permits the call (and records the new timestamp) only if fewer than max_calls remain within the window. wait_time() returns how long until the oldest recorded call falls outside the window."
+  },
+  {
+    "question": "How does LRUCache decide which item to evict when it is full?",
+    "ground_truth": "LRUCache stores items in an OrderedDict. put() moves an existing key to the end (most recently used) or inserts new ones, and if the size exceeds capacity it evicts the least-recently-used item via popitem(last=False), i.e. the first item in the OrderedDict, in data/sample_code/example2.py."
+  },
+  {
+    "question": "How does the cached() decorator build its cache key from function arguments?",
+    "ground_truth": "The cached decorator's wrapper builds the cache key as a tuple: (args, tuple(sorted(kwargs.items()))), combining positional args with sorted keyword args, then looks it up in an LRUCache instance created per decorated function."
+  }
+]
