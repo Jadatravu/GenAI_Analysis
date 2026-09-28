@@ -1,0 +1,3 @@
+anyjev[hf]
+psutil>=6
+pytest>=8
